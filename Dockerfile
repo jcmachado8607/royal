@@ -1,5 +1,5 @@
 # Use an appropriate Node.js base image
-FROM node:14
+FROM node:20
 
 # Add labels to the image
 LABEL version="latest"
