@@ -28,4 +28,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:latest, ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:$(git rev-parse HEAD)
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:latest, ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:${{ github.sha }}
