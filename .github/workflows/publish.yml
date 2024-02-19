@@ -25,7 +25,8 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v5
         with:
+          GIT_COMMIT_HASH=$(git rev-parse HEAD)
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:latest , ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:commit-hash-tag
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:latest , ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:GIT_COMMIT_HASH
