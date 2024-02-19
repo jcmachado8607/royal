@@ -29,3 +29,4 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:$GIT_COMMIT_HASH
