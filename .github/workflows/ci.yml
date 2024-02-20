@@ -41,12 +41,19 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:latest, ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:${{ github.sha }}
 
   deploy:
-    runs-on: ubuntu-latest
-
-    needs: build
+    runs-on: self-hosted
 
     steps:
-      - name: Deploy to EC2
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: SSH into EC2 instance and deploy Docker container
         run: |
-          scp -o StrictHostKeyChecking=no -r ./docker-compose.yml ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/
-          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} 'docker-compose -f /home/ec2-user/docker-compose.yml up -d'
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'docker pull jcmachado86/royal-app:latest'
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'docker stop jcmachado86/royal-app || true'
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'docker rm jcmachado86/royal-app || true'
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'docker run -d --name jcmachado86/royal-app -p 3000>:3000 jcmachado86/royal-app:latest'
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
