@@ -1,6 +1,10 @@
 # Use an appropriate Node.js base image
 FROM node:20
 
+# Add labels to the image
+LABEL version="latest"
+LABEL git_commit_hash=$GIT_COMMIT_HASH
+
 # Set a build argument for the git commit hash
 ARG GIT_COMMIT_HASH
 
