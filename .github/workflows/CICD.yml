@@ -30,20 +30,21 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:latest, ${{ secrets.DOCKERHUB_USERNAME }}/royal-app:${{ github.sha }}
 
+
   deploy:
-    runs-on: self-hosted
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: SSH into EC2 instance and deploy Docker container
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'docker pull jcmachado86/royal-app:latest'
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'docker stop jcmachado86/royal-app || true'
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'docker rm jcmachado86/royal-app || true'
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'docker run -d --name jcmachado86/royal-app -p 3000>:3000 jcmachado86/royal-app:latest'
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
-          EC2_HOST: ${{ secrets.EC2_HOST }}
+      # this is unchanged
+      # checkout & typescript checks
+      # pushing the image to docker hub - see the link above
+      - name: SSH and deploy to AWS EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker pull jcmachado86/royal-app:latest
+            docker stop royal-app
+            docker rm royal-app
+            docker run -d --name royal-appr --env-file .env -p 3000:3000 jcmachado86/royal-app:latest
