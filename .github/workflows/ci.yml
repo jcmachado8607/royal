@@ -46,9 +46,6 @@ jobs:
     needs: build
 
     steps:
-      - name: Copy SSH key
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-
       - name: Deploy to EC2
         run: |
           scp -o StrictHostKeyChecking=no -r ./docker-compose.yml ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/
