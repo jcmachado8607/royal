@@ -61,4 +61,4 @@ jobs:
      
       - name: Handle failures
         if: ${{ failure() }}
-        run: echo "$(date -u) - $GITHUB_REPOSITORY" >> error.log
+        run: echo "${{ steps.t1.outputs.time }} - ${{ GITHUB_REPOSITORY }}"
