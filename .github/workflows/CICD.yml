@@ -55,7 +55,11 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@3.87.86.168 'sudo docker run -d --name royal-app -p 3000:3000 jcmachado86/royal-app:latest'
 
+      - name: Set timestamp
+        run: echo "TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+
       - name: Handle failures
         if: ${{ failure() }}
-        run: echo"::set-output name=date::$(date+'%Y/%m/%d') - ${{ github.repository }}"
+        run: echo "${{ env.TIMESTAMP }}" - ${{ github.repository }}
+        #run: echo"::set-output name=date::$(date+'%Y/%m/%d') - ${{ github.repository }}"
         #run: echo"::set-output name=date::$(date+)   ${{env.NOW}} - ${{ github.repository }}"
