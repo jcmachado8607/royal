@@ -61,4 +61,4 @@ jobs:
      
       - name: Handle failures
         if: ${{ failure() }}
-        run: echo "${{ steps.t1.outputs.time }} - ${{ GITHUB_REPOSITORY }}"
+        run: echo "${{ steps.t1.outputs.time }} - ${{ github.repository }}"
