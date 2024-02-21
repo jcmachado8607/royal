@@ -39,7 +39,7 @@ jobs:
 
       - name: Set permissions for private key
         run: |
-          echo "${{ secrets.SSHHH_PRIVATE_KEY }}" > key.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
           chmod 600 key.pem
 
       - name: Pull Docker image
@@ -55,16 +55,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@3.87.86.168 'sudo docker run -d --name royal-app -p 3000:3000 jcmachado86/royal-app:latest'
 
-
-
-      - name: Put current date into a variable
-        run: |
-          $NOW=& Get-Date -format yyyy-MM-dd
-          echo "NOW=$NOW" >> $env:GITHUB_ENV
-      - name: Use variable
-        run: |
-          echo "${{env.NOW}}"
-
       - name: Handle failures
         if: ${{ failure() }}
-        run: echo "${{env.NOW}} - ${{ github.repository }}"
+        run: echo”::set-output name=date::$(date+’%Y/%m/%d’) - ${{ github.repository }}”
+        #run: echo"::set-output name=date::$(date+)   ${{env.NOW}} - ${{ github.repository }}"
