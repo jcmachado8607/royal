@@ -31,7 +31,7 @@ jobs:
       
       - name: Handle failures
         if: ${{ failure() }}
-        run: echo "$(date -u +"%Y-%m-%d %H:%M:%S")" - ${{ github.repository }}
+        run: echo "$(date -u +"%Y-%m-%d %H:%M:%S")" - ${{ github.repository }} >> /home/ec2-user/actions-runner/github_action_error.log
 
   deploy:
       needs: build  # Specifies that the `deploy` job depends on the `build` job
@@ -43,7 +43,7 @@ jobs:
 
       - name: Set permissions for private key
         run: |
-          echo "${{ secrets.SssSH_PRIVATE_KEY }}" > key.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
           chmod 600 key.pem
 
       - name: Pull Docker image
