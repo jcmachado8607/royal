@@ -57,5 +57,5 @@ jobs:
 
       - name: Handle failures
         if: ${{ failure() }}
-        run: echo”::set-output name=date::$(date+’%Y/%m/%d’) - ${{ github.repository }}”
+        run: echo"::set-output name=date::$(date+’%Y/%m/%d’) - ${{ github.repository }}"
         #run: echo"::set-output name=date::$(date+)   ${{env.NOW}} - ${{ github.repository }}"
