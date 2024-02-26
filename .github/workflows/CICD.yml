@@ -48,16 +48,16 @@ jobs:
 
       - name: Pull Docker image
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@3.87.86.168 'sudo docker pull jcmachado86/royal-app:latest'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@54.146.192.105 'sudo docker pull jcmachado86/royal-app:latest'
 
       - name: Stop running container
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@3.87.86.168 'sudo docker stop royal-app || true'
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@3.87.86.168 'sudo docker rm royal-app || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@54.146.192.105 'sudo docker stop royal-app || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@54.146.192.105 'sudo docker rm royal-app || true'
 
       - name: Run new container
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@3.87.86.168 'sudo docker run -d --name royal-app -p 3000:3000 jcmachado86/royal-app:latest'
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@54.146.192.105 'sudo docker run -d --name royal-app -p 3000:3000 jcmachado86/royal-app:latest'
 
       - name: Handle failures
         if: ${{ failure() }}
